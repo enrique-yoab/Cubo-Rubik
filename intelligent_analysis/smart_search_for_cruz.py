@@ -1,8 +1,8 @@
-from components.function_cube import show_cube, show_face
-from components.movements_left import*
-from components.movements_right import*
-def comparate_cruz(copy_cube, cruz):
-    print
+def depth_search(centros_faltantes):
+    if centros_faltantes > 0:
+        return False  #sigue haciendo movimiento
+    else:
+        return True  #ya no hagas movimientos
 
 def search_for_the_center(copy_cube):
     #se crea un arreglo temporal que me almacenara la cara donde se encuentre el centro para armar la cruz
@@ -20,7 +20,7 @@ def search_for_the_center(copy_cube):
 #esta funcion recibe las que caras que son afectadas
 #la cruz blanca para comparar
 #Y las categoriza para buscar la mejor jugadas
-def possible_plays(faces, cruz_roja):
+def possible_plays(faces, cruz_blanca):
     peso, categoria, posicion = [], [], []  # Listas para acumular pesos, categorías y posiciones
 
     # Mapeo de colores a categorías
@@ -37,7 +37,7 @@ def possible_plays(faces, cruz_roja):
         temporal = faces[i]
         color_centro = temporal[1][1]  # Obtener el color del centro de la cara
         if color_centro != 'W':  # Si el centro no es blanco
-            posicion_roja = play_position(temporal)  # Obtener posiciones de centros rojos
+            posicion_roja = play_position(temporal)  # Obtener posiciones de centros blancos
             if color_centro in color_to_category:
                 cat = color_to_category[color_centro]
                 posicion.extend(posicion_roja)  # Acumular posiciones
@@ -45,7 +45,7 @@ def possible_plays(faces, cruz_roja):
                 peso.extend(peso_jugada)  # Acumular pesos
                 categoria.extend([cat] * len(peso_jugada))  # Acumular categorías
         else:
-            alineados, faltante = comparar_cruz(temporal,cruz_roja)
+            alineados, faltante = comparar_cruz(temporal,cruz_blanca)
             #se regresa los valores que coinciden y los que faltan para completar la cruz
             posicion.append(alineados)  #los que esten alineados
             peso.append(faltante)       #los que estan desalineados
@@ -97,3 +97,41 @@ def quit_duplicate(faces):
             recortado.append(cara)
     return recortado
 
+def centro_disponible(cara_blanqueada):
+    #regresaremos los indices disponibles
+    disp = []
+    centros = ((0,1),(1,0),(1,2),(2,1))
+    for i,j in centros:
+        if cara_blanqueada[i][j] == 'E':
+            disp.append((i,j)) 
+    return disp
+
+def min_tiro(pesos, categorias, posiciones): 
+    mejores, color, pos= [],[],[]
+    for i in range(len(pesos)):
+        valor = pesos[i]
+        if valor == 1 and categorias[i] != 2:
+            mejores.append(valor)
+            color.append(categorias[i])
+            pos.append(posiciones[i])
+    return mejores, color, pos
+
+def max_tiro(pesos, categorias, posiciones):
+    peores, color, pos= [],[],[]
+    for i in range(len(pesos)):
+        valor = pesos[i]
+        if valor == 2 and categorias[i] != 2:
+            peores.append(valor)
+            color.append(categorias[i])
+            pos.append(posiciones[i])
+    return peores, color, pos
+
+def comparar_cruz(white_face, cruz_blanca):
+    centros_alineados = 0
+    centro_faltates = 5
+    cruz = ((0,1),(1,0),(1,2),(2,1),(1,1))
+    for i, j in cruz:
+        if white_face[i][j] == cruz_blanca[i][j]:
+            centros_alineados = centros_alineados + 1
+    centro_faltates = centro_faltates - centros_alineados
+    return centros_alineados, centro_faltates

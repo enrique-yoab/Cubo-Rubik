@@ -43,7 +43,7 @@ def crear_cubo():
     return cubo
 
 def move_face(cube, movimiento, color):
-    #La cara principal es la roja
+    #La cara principal es la blanca
     #se obtiene la cara que estoy viendo o movere
     cara = cube[color]
     #se obtienen los colores de las orillas, esquinas y centros
@@ -89,12 +89,3 @@ def show_face(face):
         print("]")
     print()
 
-def comparar_cruz(white_face, cruz_blanca):
-    centros_alineados = 0
-    centro_faltates = 5
-    cruz = ((0,1),(1,0),(1,2),(2,1),(1,1))
-    for i, j in cruz:
-        if white_face[i][j] == cruz_blanca[i][j]:
-            centros_alineados = centros_alineados + 1
-    centro_faltates = centro_faltates - centros_alineados
-    return centros_alineados, centro_faltates
