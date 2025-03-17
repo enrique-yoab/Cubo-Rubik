@@ -3,6 +3,37 @@ from components.movements_left import*
 from components.function_cube import movement_of_cube, move_face
 from intelligent_analysis.smart_search_for_cruz import*
 
+#esta funcion ya recibe el cubo blanqueado
+def search_play(copy_cube, cruz_blanca):
+    #buscamos los centros y el cubo esta blanqueado
+    #blanquear es quitar los colores y dejar solo el color blanco 
+    #quitamos duplicados para evitar comparaciones de mas
+    centros = quit_duplicate(search_for_the_center(copy_cube))
+    #buscamos las mejor jugada con base a cuantos movimientos, posicion
+    #y el peso que tiene
+    #y la categoria es el color de la cara donde esta el juego    
+    pesos, categorias, posiciones = possible_plays(centros, cruz_blanca)
+    """print(str(pesos) + (" <--Este son los pesos"))
+    print(str(categorias) + (" <--Este son los colores"))
+    print(str(posiciones) + (" <--Esta son las posiciones"))"""
+    #-------------------------------------------------------------------------
+    #Creamos la logica para poder realizar los movimientos con base a la posicion en la que se encuentran 
+    #crearemos un condicion que almacene el indice de cara y en donde se encuentra W
+    #Ya sea el primer renglon,la primera columa, la ultima columa y el ultimo renglon
+    #cada uno tendra una bandera para saber cual es cada uno
+    #obtenemos los centros que falta a alinear, lo hacemos en for porque la cara principal puede estar donde sea
+        
+    movimientos, color, lugar = min_tiro(pesos, categorias, posiciones)
+    if not movimientos:
+        movimientos , color, lugar = max_tiro(pesos, categorias, posiciones)
+    #Retornamos los mejores movimientos osea los que nada mas se hace 1 movimientos
+    #Y si no hay retornamos los de 2 movimientos (movimientos)
+    #Retornamos la cara en la que esta el centro a acomodar (color)
+    #Retornamos la posicion en la que esta el centro (lugar)
+    #retornamos el numero de centros a alinear (faltante)
+    return movimientos, color, lugar
+
+
 #En esta seccion sera para definir la mejor jugada para crear la cruz
 #copy_cube es la copia del cubo pero blanqueda 
 def best_game(copy_cube, cruz_blanca, faltante):
@@ -10,18 +41,17 @@ def best_game(copy_cube, cruz_blanca, faltante):
     almacen = []
 
     if depth_search(faltante):
-        print("Se formó la cruz")
+        #Se agrega por cualquier error y verifica primero si hay elementos a ordenar
         return almacen
     else:
         # Se tienen las caras iniciales que tienen los centros
         # Se obtiene el número de jugadas, la cara, la posición del centro y cuántos faltan por alinearse
-        jugada, color, lugar, sobrante = search_play(copy_cube, cruz_blanca)
-        """print("---------------------------------------" * (len(jugada) + 1))
-        print(f"Falta {sobrante} centros por ordenar")
-        print("Las jugadas son: ", jugada)
+        jugada, color, lugar = search_play(copy_cube, cruz_blanca)
+        
+        """print("Las jugadas son: ", jugada)
         print("El color de las jugadas son: ", color)
-        print("Las posiciones del centro están en: ", lugar)
-        print("---------------------------------------" * (len(jugada) + 1))"""
+        print("Las posiciones del centro están en: ", lugar)"""
+        
 
         # Ordenar las jugadas según el orden deseado: caras 0 y 5, luego 1 y 3, y finalmente 4
         orden_caras = [0, 5, 1, 3, 4]  # Orden de prioridad de las caras
@@ -41,59 +71,53 @@ def best_game(copy_cube, cruz_blanca, faltante):
         huecos_disp = centro_disponible(copy_cube[2])
 
         if jugadas_ordenadas[0] == 1:  # Movimiento para 1 jugada
-            print("Movimientos de 1 jugada")
+            # print("Movimientos de 1 jugadas")
             for i in range(len(jugadas_ordenadas)):
-                print("Los centros disponibles son:", huecos_disp)
+                # print("Los centros disponibles son:", huecos_disp)
                 principal = centro_principal(colores_ordenados[i], lugares_ordenados[i])
                 if principal in huecos_disp:
-                    print(f"---- La cara principal del color {colores_ordenados[i]}, de la posición {lugares_ordenados[i]} es: {principal} y está disponible")
+                    # print(f"---- La cara principal del color {colores_ordenados[i]}, de la posición {lugares_ordenados[i]} es: {principal} y SI está disponible")
                     almacen.append(movimientos[i])
                     huecos_disp.remove(principal)
                 else:
-                    print("Y no está disponible, busca un lugar disponible y agregamos más movimientos")
+                    # print(f"---- La cara principal del color {colores_ordenados[i]}, de la posición {lugares_ordenados[i]} es: {principal} y NO está disponible")
                     # Enviamos su movimiento principal ya que solamente es 1
                     # Y estos no tienen su lugar disponible, enviamos los huecos disponibles, el color que analizamos
                     # Y su unico movimiento a realizar
-                    mov_extra, huecos_disp = mov_extra_para_uno(movimientos[i], colores_ordenados[i], lugares_ordenados[i], huecos_disp)
+                    mov_extra, huecos_disp , elegido = mov_extra_para_uno(movimientos[i], colores_ordenados[i], lugares_ordenados[i], huecos_disp)
                     for k in range(len(mov_extra)):
                         almacen.append(mov_extra[k])
-                    print(f"Para el movimiento {i + 1} bloqueado se agregaron {len(mov_extra)}")
+                    # print(f"----> Movimientos adicionales agregados: {len(mov_extra)} en la posicion {elegido}")
                     break #Solo un movimiento
-
         elif jugadas_ordenadas[0] == 2:  # Movimiento para 2 jugadas
-            print("Movimientos de 2 jugadas")
+            # print("Movimientos de 2 jugadas")
             for i in range(len(jugadas_ordenadas)):
-                print("Los centros disponibles son:", huecos_disp)
+                # print("Los centros disponibles son:", huecos_disp)
                 principal = centro_principal(colores_ordenados[i], lugares_ordenados[i])
                 if principal in huecos_disp:
-                    print(f"---- La cara principal del color {colores_ordenados[i]}, de la posición {lugares_ordenados[i]} es: {principal} y está disponible")
+                    # print(f"---- La cara principal del color {colores_ordenados[i]}, de la posición {lugares_ordenados[i]} es: {principal} y SI está disponible")
                     # Agregar los 2 movimientos principales
                     almacen.append(movimientos[i * 2])       # Primer movimiento
                     almacen.append(movimientos[i * 2 + 1])  # Segundo movimiento
                     huecos_disp.remove(principal)            # Eliminar el centro ocupado
+                    break #Solo un movimiento
                 else:
-                    print(f"---- La cara principal del color {colores_ordenados[i]}, de la posición {lugares_ordenados[i]} es: {principal} y NO está disponible")
+                    # print(f"---- La cara principal del color {colores_ordenados[i]}, de la posición {lugares_ordenados[i]} es: {principal} y NO está disponible")
                     # Agregar movimientos adicionales para liberar el centro principal
-                    mov_extra, huecos_disp = mov_extra_para_dos(movimientos[i * 2], movimientos[i * 2 + 1], colores_ordenados[i], lugares_ordenados[i], huecos_disp)
+                    mov_extra, huecos_disp , elegido = mov_extra_para_dos(movimientos[i * 2], movimientos[i * 2 + 1], colores_ordenados[i], lugares_ordenados[i], huecos_disp)
                     for movimiento in mov_extra:
                         almacen.append(movimiento)
-                    print(f"---- Movimientos adicionales agregados: {len(mov_extra)}")
+                    # print(f"----> Movimientos adicionales agregados: {len(mov_extra)} en la posicion {elegido}")
                     break #Solo un movimiento
 
-    if len(huecos_disp) == 0:
-        print("Formaste la cruz")
-    else:
-        print("Los huecos disponibles que quedan son:", huecos_disp)
-        
     return almacen
+        
 
 def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibles):
     """
     Define los movimientos extra para las posiciones disponibles cuando los movimientos principales estan bloqueados
     """
     movimientos_extra = []
-    principal = centro_principal(color, lugar)
-    print(f"La cara principal del color {color}, de la posicion {lugar} es: {principal} y no esta disponible")
     
     for (i, j) in lugares_disponibles:
         if color == 0: #Cara roja
@@ -104,15 +128,14 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                     
                 elif i == 2 and j == 1: #Centro del renglon inferior
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
-                    
+                    break
                 elif i == 1 and j == 0: #Centro de la primera columna
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento1)
@@ -120,7 +143,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
             #centro principal (1,0) #Primera Columna
             elif lugar == 1: #renglon inferior
                 if i == 0 and j == 1: #Centro del renglon superior
@@ -128,14 +151,14 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                     
                 elif i == 2 and j == 1: #Centro del renglon inferior
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 2: #Centro de la ultima columna
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_left)
@@ -143,7 +166,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
         elif color == 1:
             #Centro principal (2,1) #renglon inferior
             if lugar == 2: #Primera Columna
@@ -153,7 +176,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_L_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 0 and j == 1: #Centro en el renglon superior
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_left)
@@ -162,13 +185,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_L_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 0: #Centro en la primera columna
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_L_right)
-                    lugares_disponibles.remove((i,j))
+                    break
             #Centro principal (0,1) #renglon superior
             elif lugar == 3: #Ultima columna
                 if i == 1 and j == 0: #Centro en la primera columna
@@ -176,13 +199,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 2: #Centro en la ultima columna
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 2 and j == 1: #Centro en el renglon inferior
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_right)
@@ -190,7 +213,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                     
         elif color == 3: #Cara verde
             #Centro principal (0,1) renglon superior
@@ -200,13 +223,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 2: #El centro en la ultima columna
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 2 and j == 1: #El centro en el renglon inferior
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_left)
@@ -214,7 +237,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_F_right) 
-                    lugares_disponibles.remove((i,j))
+                    break
                         
             #Centro principal (2,1) #Renglon inferior
             elif lugar == 3: #Ultima columna
@@ -224,13 +247,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_R_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 2: #El centro en la ultima columna
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 0 and j == 1: #El centro en el renglon superior
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_right)
@@ -239,7 +262,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_R_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 
         elif color == 5: #Cara naranja
             #centro principal (1,2) #ultima columna
@@ -249,13 +272,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 0 and j == 1 : #El centro en el renglon superior
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 0 : #El centro en la primera columna
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_right)
@@ -263,7 +286,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
             #Centro principal (1,0) #primera columna
             elif lugar == 1: #columna inferior
                 if i == 2 and j == 1: #El centro en el renglon inferior
@@ -271,13 +294,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 0 and j == 1: #El centro en el renglon superior
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 2: #El centro en la ultima columna
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_F_right)
@@ -286,7 +309,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(move_D_left)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                     
         elif color == 4: #Cara amarillo
             #Centro principal (0,1) renglon superior
@@ -296,13 +319,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 2: #El centro en la ultima columna
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 2 and j == 1: #el centro en el renglon inferior
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_F_right)
@@ -310,7 +333,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
             #Centro principal (2,1) #Renglon inferior
             elif lugar == 1: #Renglon inferior
                 if i == 1 and j == 0 : #El centro en la primera columna
@@ -318,13 +341,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 2: #El centro en la ultima columna 
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 0 and j == 1: #El centro en el renglon superior
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_F_right)
@@ -332,7 +355,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
             #Centro principal (1,2) #Ultima columna
             elif lugar == 2: #Primera columna
                 if i == 0 and j == 1: #El centro en el renglon superior
@@ -340,13 +363,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 2 and j == 1: #El centro en el renglon inferior
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_R_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 0: #El centro en la primera columna
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_F_right)
@@ -354,7 +377,7 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
             #Centro principal (1,0) #Primera columna
             elif lugar == 3:#Ultima columna
                 if i == 0 and j == 1: #El centro en el renglon superior
@@ -362,13 +385,13 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_right)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 2 and j == 1: #El centro en el renglon inferior
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(movimiento1)
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
+                    break
                 elif i == 1 and j == 2: #El centro en la ultima columna
                     movimientos_extra.append(move_F_right)
                     movimientos_extra.append(move_F_right)
@@ -376,10 +399,12 @@ def mov_extra_para_dos(movimiento1, movimiento2, color, lugar, lugares_disponibl
                     movimientos_extra.append(movimiento2)
                     movimientos_extra.append(move_F_left)
                     movimientos_extra.append(move_F_left)
-                    lugares_disponibles.remove((i,j))
-
+                    break
+    #borro la posicion que encontro y regresa a su estado original
+    lugares_disponibles.remove((i,j))
+    elegido = (i,j)
     #Retornamos la lista de movimientos extras
-    return movimientos_extra, lugares_disponibles
+    return movimientos_extra, lugares_disponibles, elegido
 
 #este bloque define los movimientos extra para las posiciones disponibles
 #ya que su movimiento principal esta bloqueado por otro centro
@@ -389,8 +414,6 @@ def mov_extra_para_uno(movimiento, color, lugar, lugares_disponibles):
     Define los movimientos extra para las posiciones disponibles cuando el movimiento principal está bloqueado.
     """
     movimientos_extra = []
-    principal = centro_principal(color, lugar)
-    print(f"La cara principal del color {color}, de la posicion {lugar} es: {principal} y no esta disponible")
 
     for (i, j) in lugares_disponibles:
         # Las caras roja (0) y naranja (5) tienen sus centros principales en la misma posición, por lo que comparten la misma lógica.
@@ -477,48 +500,12 @@ def mov_extra_para_uno(movimiento, color, lugar, lugares_disponibles):
                     break
     #borro la posicion que encontro y regresa a su estado original
     lugares_disponibles.remove((i,j))
+    elegido = (i,j)
     # Agregamos el movimiento original al final
 
     # Devolvemos la lista de movimientos adicionales
-    return movimientos_extra, lugares_disponibles
-            
-
-#esta funcion ya recibe el cubo blanqueado
-def search_play(copy_cube, cruz_roja):
-    #buscamos los centros y el cubo esta blanqueado
-    #blanquear es quitar los colores y dejar solo el color rojo 
-    #quitamos duplicados para evitar comparaciones de mas
-    centros = quit_duplicate(search_for_the_center(copy_cube))
-    #imprimimos los centros    
-    for i in range(len(centros)):
-        print(f"Esta es la cara {i} que tiene en sus centros a W") 
-        show_face(centros[i])
-    #buscamos las mejor jugada con base a cuantos movimientos, posicion
-    #y el peso que tiene
-    #y la categoria es el color de la cara donde esta el juego    
-    pesos, categorias, posiciones = possible_plays(centros, cruz_roja)
-    """print(str(pesos) + (" <--Este son los pesos"))
-    print(str(categorias) + (" <--Este son los colores"))
-    print(str(posiciones) + (" <--Esta son las posiciones"))"""
-    #-------------------------------------------------------------------------
-    #Creamos la logica para poder realizar los movimientos con base a la posicion en la que se encuentran 
-    #crearemos un condicion que almacene el indice de cara y en donde se encuentra W
-    #Ya sea el primer renglon,la primera columa, la ultima columa y el ultimo renglon
-    #cada uno tendra una bandera para saber cual es cada uno
-    #obtenemos los centros que falta a alinear, lo hacemos en for porque la cara principal puede estar donde sea
-    for i in range(len(categorias)):
-        if categorias[i] == 2:
-            faltante = pesos[i]
+    return movimientos_extra, lugares_disponibles, elegido
         
-    movimientos, color, lugar = min_tiro(pesos, categorias, posiciones)
-    if not movimientos:
-        movimientos , color, lugar = max_tiro(pesos, categorias, posiciones)
-    #Retornamos los mejores movimientos osea los que nada mas se hace 1 movimientos
-    #Y si no hay retornamos los de 2 movimientos (movimientos)
-    #Retornamos la cara en la que esta el centro a acomodar (color)
-    #Retornamos la posicion en la que esta el centro (lugar)
-    #retornamos el numero de centros a alinear (faltante)
-    return movimientos, color, lugar, faltante
 
 def jugada_clasificada(pesos, categoria, posicion):
     #pesos = 1, 2   <---numero de movimientos

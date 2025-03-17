@@ -1,4 +1,3 @@
-from components.function_cube import show_cube, show_face
 from intelligent_analysis.decision_for_cruz import*
 import copy as cp
 
@@ -36,10 +35,6 @@ def create_cruz_in_face(cube):
     for i in range(len(caras_blanquedas)):
         caras_blanquedas[i] = whiten_face(caras_blanquedas[i], 'W')  # Modificar cada cara individualmente
 
-    #imprime las caras blanqueadas
-    show_face(cruz_blanca)
-    print("----------------------Este es el cubo blanqueado----------------------")
-    show_cube(caras_blanquedas)
     #Se crea la logica inteligente para que crea la cruz primero
     #Se busca la mejor jugada a realizar
     profundidad = 4 #son 4 centros para alinear, por lo que su profundida esta en los centros desalineados
@@ -47,16 +42,14 @@ def create_cruz_in_face(cube):
     while profundidad > 0:
         plays = best_game(caras_blanquedas, cruz_blanca, profundidad)
         for i in range(len(plays)):
-            print(f"La mejor jugada a realizar es {plays[i].__name__} para el cubo original")
+            #print(f"La mejor jugada a realizar es {plays[i].__name__} para el cubo original")
             cube = movement_of_cube(plays[i], cube)
             copy_cube = movement_of_cube(plays[i], copy_cube)
         alineados, no_alineados = comparar_cruz(cube[2],cruz_blanca)
         profundidad = no_alineados   
-        print(f"faltan {no_alineados} por ordenar y {alineados} estan ordenados") 
         movimientos_finales.extend(plays)
         if profundidad == 0:
-            print("El cubo tiene la cruz")
-            show_cube(cube)
+            print(f"---------->>>>>  EL CUBO REALIZO {len(movimientos_finales)} MOVIMIENTOS PARA ARMAR LA CRUZ  <<<<<-------------")
     #fin del ciclo while
     return cube
     ### Ultima modificacion 17/03/2025 12:50 am
