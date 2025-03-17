@@ -128,10 +128,44 @@ def max_tiro(pesos, categorias, posiciones):
 
 def comparar_cruz(white_face, cruz_blanca):
     centros_alineados = 0
-    centro_faltates = 5
+    centro_faltantes = 5
     cruz = ((0,1),(1,0),(1,2),(2,1),(1,1))
     for i, j in cruz:
         if white_face[i][j] == cruz_blanca[i][j]:
             centros_alineados = centros_alineados + 1
-    centro_faltates = centro_faltates - centros_alineados
-    return centros_alineados, centro_faltates
+    centro_faltantes = centro_faltantes - centros_alineados
+    return centros_alineados, centro_faltantes
+    
+def actualizar_disponibilidad(lugares_dispo, lugar_mod, sentido):
+    centros = [(1,0),(0,1),(1,2),(2,1)]
+    acomodar = []
+    actualizado = []
+    
+    if lugar_mod in lugares_dispo:
+        lugares_dispo.remove(lugar_mod)
+        
+    for centro in centros:
+        if centro not in lugares_dispo:
+            acomodar.append("W")  #esta ocupado
+        else:
+            acomodar.append("E")  #esta libre
+            
+    # Rotar la lista de estados según el sentido
+    if sentido == 1 :
+        # Rotar a la derecha: el último elemento pasa al principio
+        acomodar = [acomodar[-1]] + acomodar[:-1]
+    elif sentido == 0 :
+        # Rotar a la izquierda: el primer elemento pasa al final
+        acomodar = acomodar[1:] + [acomodar[0]]
+    
+    for k in range(len(acomodar)):
+        if acomodar[k] == 'E':
+            actualizado.append(centros[k])
+        else:
+            #no guardamos los centros ocupados
+            continue
+    
+    return actualizado
+    
+        
+    

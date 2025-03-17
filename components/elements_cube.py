@@ -22,6 +22,7 @@ def whiten_face(cara_copy,color):
     
 
 def create_cruz_in_face(cube):
+    movimientos_finales = []
     copy_cube = cp.deepcopy(cube)
     #se crea la cruz blanca que es la cara principal de mi cubo
     cruz_blanca = cruz_principial('W')
@@ -41,9 +42,21 @@ def create_cruz_in_face(cube):
     show_cube(caras_blanquedas)
     #Se crea la logica inteligente para que crea la cruz primero
     #Se busca la mejor jugada a realizar
-    plays = best_game(copy_cube,caras_blanquedas, cruz_blanca)
-    for i in range(len(plays)):
-        print(f"La mejor jugada a realizar es {plays[i].__name__} para el cubo original")
-        cube = movement_of_cube(plays[i], cube)
-    show_cube(cube)
-    ### Ultima modificacion 14/03/2025 a las 8:16 pm
+    profundidad = 4 #son 4 centros para alinear, por lo que su profundida esta en los centros desalineados
+    #agregamos un ciclo while hasta que la profundidad sea igual a 0
+    while profundidad > 0:
+        plays = best_game(caras_blanquedas, cruz_blanca, profundidad)
+        for i in range(len(plays)):
+            print(f"La mejor jugada a realizar es {plays[i].__name__} para el cubo original")
+            cube = movement_of_cube(plays[i], cube)
+            copy_cube = movement_of_cube(plays[i], copy_cube)
+        alineados, no_alineados = comparar_cruz(cube[2],cruz_blanca)
+        profundidad = no_alineados   
+        print(f"faltan {no_alineados} por ordenar y {alineados} estan ordenados") 
+        movimientos_finales.extend(plays)
+        if profundidad == 0:
+            print("El cubo tiene la cruz")
+            show_cube(cube)
+    #fin del ciclo while
+    return cube
+    ### Ultima modificacion 17/03/2025 12:50 am
