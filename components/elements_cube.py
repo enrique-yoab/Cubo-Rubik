@@ -75,8 +75,9 @@ def ordenar_cruz(cube):
     # Lo guardamos en una tupla (num alineados ,num rotaciones)
     # Guardamos el que tiene mas alineados y su cantidad de rotaciones
     mejor_alineamiento = (max(mejor) , mejor.index(max(mejor)))
-    """print("El mejor tiro es: ",mejor_alineamiento)
-    show_cube(copy_cube)"""
+    
+    #print("El mejor tiro es: ",mejor_alineamiento)
+    #show_cube(copy_cube)
     
     #Si hay una configuracion que ya tiene las 4 centros alineados pero realizo rotaciones
     if mejor_alineamiento[0] == 4:
@@ -84,14 +85,14 @@ def ordenar_cruz(cube):
         if mejor_alineamiento[1] > 0:
             #Si tiene 3 movimientos, mejor que sea 1 a la izquierda
             if mejor_alineamiento[1] == 3:
-                copy_cube = movement_of_cube(move_F_left,copy_cube)
+                #copy_cube = movement_of_cube(move_F_left,copy_cube)
                 cube = movement_of_cube(move_F_left, cube)
                 print("Se alineo la cruz principal con un giro a la izquierda")
                 return cube
             #Si no tiene 3 movimientos que realice sus movimientos
             else:
                 for _ in range(mejor_alineamiento[1]):
-                    copy_cube = movement_of_cube(move_F_right,copy_cube)
+                    #copy_cube = movement_of_cube(move_F_right,copy_cube)
                     cube = movement_of_cube(move_F_right,cube)
                 print(f"Se alineo la cruz principal con {mejor_alineamiento[1]} movimientos a la derecha")
                 return cube
@@ -104,23 +105,29 @@ def ordenar_cruz(cube):
         #Si hay 1 o mas movimientos para alinear
         if mejor_alineamiento[1] > 0:
             if mejor_alineamiento[1] == 3:
-                copy_cube = movement_of_cube(move_F_left,copy_cube)
+                #copy_cube = movement_of_cube(move_F_left,copy_cube)
                 cube = movement_of_cube(move_F_left,cube)
                 print("La mejor configuracion se alinea con uno a la izquierda")
             #Si no realizas los movimientos que hizo anteriormente
             else:
                 for _ in range(mejor_alineamiento[1]):
-                    copy_cube = movement_of_cube(move_F_right, copy_cube)
+                    #copy_cube = movement_of_cube(move_F_right, copy_cube)
                     cube = movement_of_cube(move_F_right,cube)
                 print(f"La mejor configuracion se alineo con {mejor_alineamiento[1]} movimientos a la derecha")
+                
             #obtenemos los centros desalineados y alineados        
-            alin, des = buscar_caras_adyacentes(copy_cube)
-            reubicar_centros(copy_cube, des, alin)
+            alin, des = buscar_caras_adyacentes(cube)
+            #copy_cube = reubicar_centros(copy_cube, des, alin)
+            cube = reubicar_centros(cube,des, alin)
         #Si no realiza movimientos es que su estado inicial es la mejor configuracion
         else:
             print("Su mejor configuracion ya estaba sin rotarse")
             #Se busca los centros desalineados y alineados
-            alin, des = buscar_caras_adyacentes(copy_cube)
-            reubicar_centros(copy_cube, des, alin)
-            
+            alin, des = buscar_caras_adyacentes(cube)
+            #copy_cube = reubicar_centros(copy_cube, des, alin)
+            cube = reubicar_centros(cube,des, alin)
+    
     return cube
+
+"""def modificar_esquinas(cube):
+    """
