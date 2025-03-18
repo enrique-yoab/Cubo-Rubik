@@ -33,4 +33,5 @@ print("\n-----------------------ALINEAR LA CRUZ---------------------------------
 cubo_rubik = ordenar_cruz(cubo_rubik)
 print("\n-----------------------SE ALINEO LA CRUZ---------------------------------\n")
 show_cube(cubo_rubik)
-print("\n-----------------------SE ACOMODAN LAS ESQUINAS---------------------------------\n")
+"""print("\n-----------------------SE ACOMODAN LAS ESQUINAS---------------------------------\n")
+crear_esquinas(cubo_rubik)"""

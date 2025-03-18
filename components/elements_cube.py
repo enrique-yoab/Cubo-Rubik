@@ -129,5 +129,37 @@ def ordenar_cruz(cube):
     
     return cube
 
-"""def modificar_esquinas(cube):
-    """
+def crear_esquinas(cube):
+    movimientos = []
+    alineado = []
+    copy_cube = cp.deepcopy(cube)
+    esquinas, lados = buscar_esquinas(copy_cube)
+    print(esquinas)
+    print(lados)
+    
+    # Esto es para que analice primero si su esquina esta detras de su esquina principal
+    # TABLA PARA IDENTIFICAR FSI, FSD, FII, FSD, TSI, TSD, TII, TID
+    # FSI = (CARA BLANCA, CARA ROJA, CARA AZUL)
+    # FSD = (CARA BLANCA, CARA ROJA, CARA VERDE)
+    # FII = (CARA BLANCA, CARA NARANJA, CARA AZUL)
+    # FID = (CARA BLANCA, CARA NARANJA, CARA VERDE)
+    # TSI = (CARA AMARILLA, CARA ROJA, CARA VERDE)
+    # TSD = (CARA AMARILLA, CARA ROJA, CARA AZUL)
+    # TII = (CARA AMARILLA, CARA NARANJA, CARA VERDE)
+    # TID = (CARA AMARILLA, CARA NARANJA, CARA AZUL)
+    # El primer movimiento es para alinear la esquina 
+    # FSD donde es la cara Frontal Superior Izquierda, de mi cara blanca principal
+    # FSI donde es la cara Frontal Superior Derecha, de mi cara blanca principal
+    # FII donde es la cara Frontal Inferior Izquierda, de mi cara blanca principal
+    # FID donde es la cara Frontal Inferior Derecha, de mi cara blanca principal
+    # Y para TSD, TSI, TII, TID, T significa Trasera, que es la cara amarilla
+    # El ciclo for es para anilizar una esquina a la vez, primerp FSD, segundo FSI, tercero FII, y cuarto FID
+    for i in range(len(esquinas)):
+        if esquinas[i] == 'TSD' and i == 0: #Trasera superior derecha
+            print('TTTT')
+        elif esquinas[i] == 'TSI' and i == 1:
+            print('JJJJ')
+        elif esquinas[i] == 'TID' and i == 2:
+            print("KKKK")
+        elif esquinas[i] == 'TII' and i == 3:
+            print("LLLL")

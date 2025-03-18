@@ -192,4 +192,130 @@ def acomoda(copy_cube, caras_desalineadas):
                 return posible_mov
     else:
         print("Fueron 3 centros desalineados no hay movimiento para eso")
-        
+ 
+ 
+# ----------------------------------------SECCION DE ESQUINAS----------------------------------------------   
+def identificar_esquinas(copy_cube):
+    """
+    Identifica las esquinas de la primera capa (cara blanca) y la última capa (cara amarilla).
+    
+    :param copy_cube: Una copia del cubo actual.
+    :return: Lista de esquinas frontales y traseras con sus colores.
+    """
+    # Obtenemos las caras individuales
+    cara0, cara1, cara2, cara3, cara4, cara5 = (
+        copy_cube[0], copy_cube[1], copy_cube[2], copy_cube[3], copy_cube[4], copy_cube[5]
+    )
+    
+    # Diccionario de esquinas frontales (cara blanca)
+    esquinas_frontales = [
+        # Esquina frontal superior izquierda (blanca, roja, azul)
+        {
+            "valor": "FSI", #Frontal Superio Izquierda
+            "colores": [cara2[0][0], cara0[2][0], cara1[0][2]]
+        },
+        # Esquina frontal superior derecha (blanca, roja, verde)
+        {
+            "valor": "FSD", #Frontal Superior Derecha
+            "colores": [cara2[0][2], cara0[2][2], cara3[0][0]]
+        },
+        # Esquina frontal inferior izquierda (blanca, naranja, azul)
+        {
+            "valor": "FII", # Frontal Inferio Izquierda
+            "colores": [cara2[2][0], cara5[0][0], cara1[2][2]]
+        },
+        # Esquina frontal inferior derecha (blanca, naranja, verde)
+        {
+            "valor": "FID", #Frontal Inferior Derecha
+            "colores": [cara2[2][2], cara5[0][2], cara3[2][0]]
+        }
+    ]
+    
+    # Diccionario de esquinas traseras (cara amarilla)
+    esquinas_traseras = [
+        # Esquina trasera superior izquierda (amarilla, roja, verde)
+        {
+            "valor": "TSI", #Trasera Superior Izquierda
+            "colores": [cara4[0][0], cara0[0][2], cara3[0][2]]
+        },
+        # Esquina trasera superior derecha (amarilla, roja, azul)
+        {
+            "valor": "TSD", #Trasera Superior Derecha
+            "colores": [cara4[0][2], cara0[0][0], cara1[0][0]]
+        },
+        # Esquina trasera inferior izquierda (amarilla, naranja, verde)
+        {
+            "valor": "TII", #Trasera Inferior Izquierda
+            "colores": [cara4[2][0], cara5[2][2], cara3[2][2]]
+        },
+        # Esquina trasera inferior derecha (amarilla, naranja, azul)
+        {
+            "valor": "TID", #Trasera Inferior Derecha
+            "colores": [cara4[2][2], cara5[2][0], cara1[2][0]]
+        }
+    ]
+    #retornamos el diccionario con las esquinas
+    return esquinas_frontales, esquinas_traseras
+    
+def buscar_esquinas(copy_cube):
+    #Se regresa el diccionario
+    frontales, traseras = identificar_esquinas(copy_cube)
+    """    # Mostrar las esquinas frontales
+    print("Esquinas frontales (cara blanca):")
+    for esquina in frontales:
+        print(f"{esquina['valor']} : {esquina['colores']}")
+    
+    # Mostrar las esquinas traseras
+    print("\nEsquinas traseras (cara amarilla):")
+    for esquina in traseras:
+        print(f"{esquina['valor']} : {esquina['colores']}")"""
+    
+    # Buscar esquinas con 'W', 'R' y 'B'
+    esquinas_WRB = []
+    lado_cara_WRB = []
+    for esquina in frontales + traseras:  # Combinar frontales y traseras
+        if all(color in esquina['colores'] for color in ['W', 'R', 'B']):
+            esquinas_WRB.append(esquina['valor'])
+            lado_cara_WRB.append(esquina['colores'])
+    
+    print("Las esquinas con 'W', 'R' y 'B' están en : ", esquinas_WRB)
+    print("Las esquinas estan en [cara blanca, cara roja, cara azul] : ", lado_cara_WRB)
+    
+    # Buscar esquinas con 'W', 'R', 'G'
+    esquinas_WRG = []
+    lado_cara_WRG = []
+    for esquina in frontales + traseras:  # Combinar frontales y traseras
+        if all(color in esquina['colores'] for color in ['W', 'R', 'G']):
+            esquinas_WRG.append(esquina['valor'])
+            lado_cara_WRG.append(esquina['colores'])
+            
+    print("Las esquinas con 'W', 'R' y 'G' están en : ", esquinas_WRG)
+    print("Las esquinas estan en [cara blanca, cara roja, cara verde] : ", lado_cara_WRG)
+    
+    # Buscar esquinas con 'W', 'O', 'B'
+    esquinas_WOB = []
+    lado_cara_WOB = []
+    for esquina in frontales + traseras:  # Combinar frontales y traseras
+        if all(color in esquina['colores'] for color in ['W', 'O', 'B']):
+            esquinas_WOB.append(esquina['valor'])
+            lado_cara_WOB.append(esquina['colores'])
+            
+    print("Las esquinas con 'W', 'O' y 'B' están en : ", esquinas_WOB)
+    print("Las esquinas estan en [cara blanca, cara naranja, cara azul] : ", lado_cara_WOB)
+    
+        # Buscar esquinas con 'W', 'O', 'G'
+    esquinas_WOG = []
+    lado_cara_WOG = []
+    for esquina in frontales + traseras:  # Combinar frontales y traseras
+        if all(color in esquina['colores'] for color in ['W', 'O', 'G']):
+            esquinas_WOG.append(esquina['valor'])
+            lado_cara_WOG.append(esquina['colores'])
+            
+    print("Las esquinas con 'W', 'O' y 'G' están en : ", esquinas_WOG)
+    print("Las esquinas estan en [cara blanca, cara naranja, cara verde] : ", lado_cara_WOG)
+    
+    esquinas_totales = esquinas_WRB + esquinas_WRG + esquinas_WOB + esquinas_WOG
+    lados_totales = lado_cara_WRB + lado_cara_WRG + lado_cara_WOB + lado_cara_WOG
+    
+    return esquinas_totales, lados_totales
+
