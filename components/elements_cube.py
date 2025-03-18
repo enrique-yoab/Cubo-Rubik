@@ -1,5 +1,6 @@
 from intelligent_analysis.decision_for_cruz import*
 from intelligent_analysis.intelligent_ordering import*
+from components.movements_esquina import*
 from components.function_cube import show_cube, movement_of_cube
 import copy as cp
 
@@ -130,13 +131,11 @@ def ordenar_cruz(cube):
     return cube
 
 def crear_esquinas(cube):
-    movimientos = []
-    alineado = []
+    movimiento = []
     copy_cube = cp.deepcopy(cube)
     esquinas, lados = buscar_esquinas(copy_cube)
     print(esquinas)
     print(lados)
-    
     # Esto es para que analice primero si su esquina esta detras de su esquina principal
     # TABLA PARA IDENTIFICAR FSI, FSD, FII, FSD, TSI, TSD, TII, TID
     # FSI = (CARA BLANCA, CARA ROJA, CARA AZUL)
@@ -153,13 +152,16 @@ def crear_esquinas(cube):
     # FII donde es la cara Frontal Inferior Izquierda, de mi cara blanca principal
     # FID donde es la cara Frontal Inferior Derecha, de mi cara blanca principal
     # Y para TSD, TSI, TII, TID, T significa Trasera, que es la cara amarilla
-    # El ciclo for es para anilizar una esquina a la vez, primerp FSD, segundo FSI, tercero FII, y cuarto FID
-    for i in range(len(esquinas)):
-        if esquinas[i] == 'TSD' and i == 0: #Trasera superior derecha
-            print('TTTT')
-        elif esquinas[i] == 'TSI' and i == 1:
-            print('JJJJ')
-        elif esquinas[i] == 'TID' and i == 2:
-            print("KKKK")
-        elif esquinas[i] == 'TII' and i == 3:
-            print("LLLL")
+    falta_ordenar = 4 #Es la profundidad de mi busqueda
+    #Aqui mas adelante debe haber un ciclo while con falta ordenar > 0
+    jugada_realizada, faltantes = esquina_alineada(copy_cube,esquinas, lados, falta_ordenar)
+    
+    if len(jugada_realizada):
+        for movimiento in jugada_realizada:
+            copy_cube = movement_of_cube(movimiento, copy_cube)
+        falta_ordenar = faltantes - 1
+    else:
+        falta_ordenar = faltantes
+    print(falta_ordenar, " centros por ordenar")
+    print("El cubo acomodo una esquina")
+    show_cube(copy_cube)
