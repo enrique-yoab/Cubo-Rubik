@@ -133,8 +133,8 @@ def ordenar_cruz(cube):
 def crear_esquinas(cube):
     copy_cube = cp.deepcopy(cube)
     esquinas, lados = buscar_esquinas(copy_cube)
-    print("Las esquinas a alinear estan en       :",esquinas)
-    print("Los colores que tiene cada esquina son: ",lados)
+    """print("Las esquinas a alinear estan en       :",esquinas)
+    print("Los colores que tiene cada esquina son: ",lados)"""
     # Esto es para que analice primero si su esquina esta detras de su esquina principal
     # TABLA PARA IDENTIFICAR FSI, FSD, FII, FSD, TSI, TSD, TII, TID
     # FSI = (CARA BLANCA, CARA ROJA, CARA AZUL)
@@ -171,13 +171,13 @@ def crear_esquinas(cube):
             
             for movi in jugada_mod:
                 copy_cube = movement_of_cube(movi, copy_cube)
-            falta_ordenar = sobrante - 1
-    print("El cubo alineo el nivel inferior")            
+            falta_ordenar = sobrante - 1            
     show_cube(copy_cube)
     
 def ordenar_Esquina(esquinas, lados):
     mov_extra = []
         #Debemos agregar movimientos para la cara a alinear
+
     for i in range(len(esquinas)):
         if esquinas[i] != "TSD":
             correcto , mov_extra = alinear_esquina(esquinas[i], lados[i],i)

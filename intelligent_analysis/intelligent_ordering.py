@@ -343,7 +343,7 @@ def esquina_alineada(esquinas, lados):
                     conf_1.append(False)
             # print(conf_1)
             if all(conf_1):
-                print("Esta alineada la primera esquina FSI")
+                # print("Esta alineada la primera esquina FSI")
                 movimientos = mov_blanco_cara_superior(i)
                 break
         elif esquinas[i] == 'TSI':
@@ -359,7 +359,7 @@ def esquina_alineada(esquinas, lados):
                     conf_2.append(False)
             # print(conf_2)
             if all(conf_2):
-                print("Esta alineada la segunda esquina FSD")
+                # print("Esta alineada la segunda esquina FSD")
                 movimientos = mov_blanco_cara_superior(i)
                 break
         elif esquinas[i] == 'TID':
@@ -375,7 +375,7 @@ def esquina_alineada(esquinas, lados):
                     conf_3.append(False)
             # print(conf_3)
             if all(conf_3):
-                print("Esta alineada la tercera esquina FII")
+                # print("Esta alineada la tercera esquina FII")
                 movimientos = mov_blanco_cara_superior(i)
                 break
         elif esquinas[i] == 'TII':
@@ -391,7 +391,7 @@ def esquina_alineada(esquinas, lados):
                     conf_4.append(False)
             # print(conf_4)
             if all(conf_4):
-                print("Esta alineada la cuarta esquina FID")
+                # print("Esta alineada la cuarta esquina FID")
                 movimientos = mov_blanco_cara_superior(i)
                 break
     
@@ -421,7 +421,7 @@ def esquina_alineada(esquinas, lados):
                     conf_1.append(False)
             # print(conf_1)
             if all(conf_1):
-                print("Esta alineada la primera esquina FSI")
+                # print("Esta alineada la primera esquina FSI")
                 movimientos = mov_blanco_cara_derecha(i)
                 break
         elif esquinas[i] == 'TSI':
@@ -437,7 +437,7 @@ def esquina_alineada(esquinas, lados):
                     conf_2.append(False)
             # print(conf_2)
             if all(conf_2):
-                print("Esta alineada la segunda esquina FSD")
+                # print("Esta alineada la segunda esquina FSD")
                 movimientos = mov_blanco_cara_derecha(i)
                 break
         elif esquinas[i] == 'TID': #amarillo, naranja, azul
@@ -453,7 +453,7 @@ def esquina_alineada(esquinas, lados):
                     conf_3.append(False)
             # print(conf_3)
             if all(conf_3):
-                print("Esta alineada la tercera esquina FII")
+                # print("Esta alineada la tercera esquina FII")
                 movimientos = mov_blanco_cara_derecha(i)
                 break
         elif esquinas[i] == 'TII': #amarilla, naranja, verde
@@ -469,7 +469,7 @@ def esquina_alineada(esquinas, lados):
                     conf_4.append(False)
             # print(conf_4)
             if all(conf_4):
-                print("Esta alineada la cuarta esquina FID")
+                # print("Esta alineada la cuarta esquina FID")
                 movimientos = mov_blanco_cara_derecha(i)
                 break
 
@@ -499,7 +499,7 @@ def esquina_alineada(esquinas, lados):
                     conf_1.append(False)
             # print(conf_1)
             if all(conf_1):
-                print("Esta alineada la primera esquina FSI")
+                # print("Esta alineada la primera esquina FSI")
                 movimientos = mov_blanco_cara_trasera(i)
                 break
         elif esquinas[i] == 'TSI': #amrailla, roja, verde
@@ -515,7 +515,7 @@ def esquina_alineada(esquinas, lados):
                     conf_2.append(False)
             # print(conf_2)
             if all(conf_2):
-                print("Esta alineada la segunda esquina FSD")
+                # print("Esta alineada la segunda esquina FSD")
                 movimientos = mov_blanco_cara_trasera(i)
                 break
         elif esquinas[i] == 'TID': #amarillo, naranja, azul
@@ -531,7 +531,7 @@ def esquina_alineada(esquinas, lados):
                     conf_3.append(False)
             # print(conf_3)
             if all(conf_3):
-                print("Esta alineada la tercera esquina FII")
+                # print("Esta alineada la tercera esquina FII")
                 movimientos = mov_blanco_cara_trasera(i)
                 break
         elif esquinas[i] == 'TII': #amarilla, naranja, verde
@@ -547,7 +547,7 @@ def esquina_alineada(esquinas, lados):
                     conf_4.append(False)
             # print(conf_4)
             if all(conf_4):
-                print("Esta alineada la cuarta esquina FID")
+                # print("Esta alineada la cuarta esquina FID")
                 movimientos = mov_blanco_cara_trasera(i)
                 break
             
