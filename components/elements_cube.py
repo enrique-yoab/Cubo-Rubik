@@ -1,7 +1,7 @@
 from intelligent_analysis.decision_for_cruz import*
 from intelligent_analysis.intelligent_ordering import*
 from components.movements_esquina import*
-from components.function_cube import show_cube, movement_of_cube
+from components.function_cube import*
 import copy as cp
 
 def cruz_principial(color):
@@ -131,11 +131,10 @@ def ordenar_cruz(cube):
     return cube
 
 def crear_esquinas(cube):
-    movimiento = []
     copy_cube = cp.deepcopy(cube)
     esquinas, lados = buscar_esquinas(copy_cube)
-    print(esquinas)
-    print(lados)
+    print("Las esquinas a alinear estan en       :",esquinas)
+    print("Los colores que tiene cada esquina son: ",lados)
     # Esto es para que analice primero si su esquina esta detras de su esquina principal
     # TABLA PARA IDENTIFICAR FSI, FSD, FII, FSD, TSI, TSD, TII, TID
     # FSI = (CARA BLANCA, CARA ROJA, CARA AZUL)
@@ -152,16 +151,49 @@ def crear_esquinas(cube):
     # FII donde es la cara Frontal Inferior Izquierda, de mi cara blanca principal
     # FID donde es la cara Frontal Inferior Derecha, de mi cara blanca principal
     # Y para TSD, TSI, TII, TID, T significa Trasera, que es la cara amarilla
-    falta_ordenar = 4 #Es la profundidad de mi busqueda
+    falta_ordenar = 0 #Es la profundidad de mi busqueda
     #Aqui mas adelante debe haber un ciclo while con falta ordenar > 0
-    jugada_realizada, faltantes = esquina_alineada(copy_cube,esquinas, lados, falta_ordenar)
-    
-    if len(jugada_realizada):
-        for movimiento in jugada_realizada:
-            copy_cube = movement_of_cube(movimiento, copy_cube)
-        falta_ordenar = faltantes - 1
-    else:
-        falta_ordenar = faltantes
-    print(falta_ordenar, " centros por ordenar")
-    print("El cubo acomodo una esquina")
+    for _ in range(19):
+        
+        jugada_realizada, faltantes = esquina_alineada(esquinas, lados)
+            
+        if len(jugada_realizada):
+            for movi in jugada_realizada:
+                copy_cube = movement_of_cube(movi, copy_cube)
+            falta_ordenar = faltantes-1
+        else:
+            movimiento = ordenar_Esquina(esquinas, lados)
+            for movi in movimiento:
+                copy_cube = movement_of_cube(movi, copy_cube)
+                
+            esquina_mod, lado_mod = buscar_esquinas(copy_cube)    
+            jugada_mod, sobrante = esquina_alineada(esquina_mod, lado_mod)
+            
+            for movi in jugada_mod:
+                copy_cube = movement_of_cube(movi, copy_cube)
+            falta_ordenar = sobrante - 1
+    print("El cubo alineo el nivel inferior")            
     show_cube(copy_cube)
+    
+def ordenar_Esquina(esquinas, lados):
+    mov_extra = []
+        #Debemos agregar movimientos para la cara a alinear
+    for i in range(len(esquinas)):
+        if esquinas[i] != "TSD":
+            correcto , mov_extra = alinear_esquina(esquinas[i], lados[i],i)
+            if correcto == 0:
+                break
+        elif esquinas[i] != "TSI":
+            correcto , mov_extra = alinear_esquina(esquinas[i],lados[i],i)
+            if correcto == 0:
+                break
+        elif esquinas[i] != "TID":
+            correcto , mov_extra = alinear_esquina(esquinas[i],lados[i],i)
+            if correcto == 0:
+                break
+        elif esquinas[i] != "TII":
+            correcto, mov_extra = alinear_esquina(esquinas[i], lados[i],i)
+            if correcto == 0:
+                break
+    
+    return mov_extra

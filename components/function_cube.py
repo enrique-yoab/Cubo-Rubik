@@ -89,3 +89,23 @@ def show_face(face):
         print("]")
     print()
 
+def num_esquinas_alienadas(esquinas, lados):
+    desordenado = 0
+    for i in range(len(esquinas)):
+        if esquinas[i] == "FSI":
+            orden = ['W', 'R', 'B']
+        elif esquinas[i] == "FSD":
+            orden = ['W', 'R', 'G']
+        elif esquinas[i] == "FII":
+            orden = ['W', 'O', 'B']
+        elif esquinas[i] == "FID":
+            orden = ['W', 'O', 'G']
+        else:
+            desordenado += 1
+            continue  # Saltar esquinas desconocidas
+            
+        if lados[i] != orden:
+            desordenado += 1
+        
+
+    return desordenado

@@ -1,7 +1,7 @@
 from components.movements_left import*
 from components.movements_right import*
 from components.movements_esquina import*
-from components.function_cube import show_cube
+from components.function_cube import show_cube, num_esquinas_alienadas
 
 def analizar_cruz(copy_cube):
     alineados = []
@@ -278,8 +278,8 @@ def buscar_esquinas(copy_cube):
             esquinas_WRB.append(esquina['valor'])
             lado_cara_WRB.append(esquina['colores'])
     
-    print("Las esquinas con 'W', 'R' y 'B' están en : ", esquinas_WRB)
-    print("Sus colores son : ", lado_cara_WRB)
+    # print("Las esquinas con 'W', 'R' y 'B' están en : ", esquinas_WRB)
+    # print("Sus colores son : ", lado_cara_WRB)
     
     # Buscar esquinas con 'W', 'R', 'G'
     esquinas_WRG = []
@@ -289,8 +289,8 @@ def buscar_esquinas(copy_cube):
             esquinas_WRG.append(esquina['valor'])
             lado_cara_WRG.append(esquina['colores'])
             
-    print("Las esquinas con 'W', 'R' y 'G' están en : ", esquinas_WRG)
-    print("Sus colores son : ", lado_cara_WRG)
+    # print("Las esquinas con 'W', 'R' y 'G' están en : ", esquinas_WRG)
+    # print("Sus colores son : ", lado_cara_WRG)
     
     # Buscar esquinas con 'W', 'O', 'B'
     esquinas_WOB = []
@@ -300,8 +300,8 @@ def buscar_esquinas(copy_cube):
             esquinas_WOB.append(esquina['valor'])
             lado_cara_WOB.append(esquina['colores'])
             
-    print("Las esquinas con 'W', 'O' y 'B' están en : ", esquinas_WOB)
-    print("Sus colores son : ", lado_cara_WOB)
+    # print("Las esquinas con 'W', 'O' y 'B' están en : ", esquinas_WOB)
+    # print("Sus colores son : ", lado_cara_WOB)
     
         # Buscar esquinas con 'W', 'O', 'G'
     esquinas_WOG = []
@@ -311,8 +311,8 @@ def buscar_esquinas(copy_cube):
             esquinas_WOG.append(esquina['valor'])
             lado_cara_WOG.append(esquina['colores'])
             
-    print("Las esquinas con 'W', 'O' y 'G' están en : ", esquinas_WOG)
-    print("Las esquinas estan en [cara blanca, cara naranja, cara verde] : ", lado_cara_WOG)
+    # print("Las esquinas con 'W', 'O' y 'G' están en : ", esquinas_WOG)
+    # print("Sus colores son : ", lado_cara_WOG)
     
     esquinas_totales = esquinas_WRB + esquinas_WRG + esquinas_WOB + esquinas_WOG
     lados_totales = lado_cara_WRB + lado_cara_WRG + lado_cara_WOB + lado_cara_WOG
@@ -320,7 +320,7 @@ def buscar_esquinas(copy_cube):
     return esquinas_totales, lados_totales
 
 #Si esta alineada la esquina con su esquina principal realiza estos movimientos
-def esquina_alineada(copy_cube, esquinas, lados, faltan):
+def esquina_alineada(esquinas, lados):
     movimientos = []
     #Confirmaciones de cada esquina
     #Almacena valores booleanos True o False
@@ -332,7 +332,7 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
         extracto = lados[i]
         if esquinas[i] == 'TSD':
             for j in range(len(extracto)):
-                print(extracto[j])
+                # print(extracto[j])
                 if extracto[j] == 'R' and j == 0:
                     conf_1.append(True)
                 elif extracto[j] == 'W' and j == 1:
@@ -341,14 +341,14 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
                     conf_1.append(True)
                 else:
                     conf_1.append(False)
-            print(conf_1)
+            # print(conf_1)
             if all(conf_1):
                 print("Esta alineada la primera esquina FSI")
                 movimientos = mov_blanco_cara_superior(i)
                 break
         elif esquinas[i] == 'TSI':
             for j in range(len(extracto)):
-                print(extracto[j])
+                # print(extracto[j])
                 if extracto[j] == 'G' and j == 0:
                     conf_2.append(True)
                 elif extracto[j] == 'R' and j == 1:
@@ -357,14 +357,14 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
                     conf_2.append(True)
                 else:
                     conf_2.append(False)
-            print(conf_2)
+            # print(conf_2)
             if all(conf_2):
                 print("Esta alineada la segunda esquina FSD")
                 movimientos = mov_blanco_cara_superior(i)
                 break
         elif esquinas[i] == 'TID':
             for j in range(len(extracto)):
-                print(extracto[j])
+                # print(extracto[j])
                 if extracto[j] == 'B' and j == 0:
                     conf_3.append(True)
                 elif extracto[j] == 'O' and j == 1:
@@ -373,14 +373,14 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
                     conf_3.append(True)
                 else:
                     conf_3.append(False)
-            print(conf_3)
+            # print(conf_3)
             if all(conf_3):
                 print("Esta alineada la tercera esquina FII")
                 movimientos = mov_blanco_cara_superior(i)
                 break
         elif esquinas[i] == 'TII':
             for j in range(len(extracto)):
-                print(extracto[j])
+                # print(extracto[j])
                 if extracto[j] == 'O' and j == 0:
                     conf_4.append(True)
                 elif extracto[j] == 'B' and j == 1:
@@ -389,11 +389,12 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
                     conf_4.append(True)
                 else:
                     conf_4.append(False)
-            print(conf_4)
+            # print(conf_4)
             if all(conf_4):
                 print("Esta alineada la cuarta esquina FID")
                 movimientos = mov_blanco_cara_superior(i)
                 break
+    
     if len(movimientos):
         #Se retorna los que faltan por ordenar
         sobran = num_esquinas_alienadas(esquinas,lados) 
@@ -409,7 +410,7 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
         extracto = lados[i]
         if esquinas[i] == 'TSD':
             for j in range(len(extracto)):
-                print(extracto[j])
+                # print(extracto[j])
                 if extracto[j] == 'B' and j == 0:
                     conf_1.append(True)
                 elif extracto[j] == 'R' and j == 1:
@@ -418,14 +419,14 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
                     conf_1.append(True)
                 else:
                     conf_1.append(False)
-            print(conf_1)
+            # print(conf_1)
             if all(conf_1):
                 print("Esta alineada la primera esquina FSI")
                 movimientos = mov_blanco_cara_derecha(i)
                 break
         elif esquinas[i] == 'TSI':
             for j in range(len(extracto)):
-                print(extracto[j])
+                # print(extracto[j])
                 if extracto[j] == 'R' and j == 0:
                     conf_2.append(True)
                 elif extracto[j] == 'W' and j == 1:
@@ -434,14 +435,14 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
                     conf_2.append(True)
                 else:
                     conf_2.append(False)
-            print(conf_2)
+            # print(conf_2)
             if all(conf_2):
                 print("Esta alineada la segunda esquina FSD")
                 movimientos = mov_blanco_cara_derecha(i)
                 break
         elif esquinas[i] == 'TID': #amarillo, naranja, azul
             for j in range(len(extracto)):
-                print(extracto[j])
+                # print(extracto[j])
                 if extracto[j] == 'O' and j == 0:
                     conf_3.append(True)
                 elif extracto[j] == 'W' and j == 1:
@@ -450,14 +451,14 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
                     conf_3.append(True)
                 else:
                     conf_3.append(False)
-            print(conf_3)
+            # print(conf_3)
             if all(conf_3):
                 print("Esta alineada la tercera esquina FII")
                 movimientos = mov_blanco_cara_derecha(i)
                 break
         elif esquinas[i] == 'TII': #amarilla, naranja, verde
             for j in range(len(extracto)):
-                print(extracto[j])
+                # print(extracto[j])
                 if extracto[j] == 'G' and j == 0:
                     conf_4.append(True)
                 elif extracto[j] == 'O' and j == 1:
@@ -466,7 +467,7 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
                     conf_4.append(True)
                 else:
                     conf_4.append(False)
-            print(conf_4)
+            # print(conf_4)
             if all(conf_4):
                 print("Esta alineada la cuarta esquina FID")
                 movimientos = mov_blanco_cara_derecha(i)
@@ -483,26 +484,236 @@ def esquina_alineada(copy_cube, esquinas, lados, faltan):
     ###Esta seccion es para analizar las esquinas alineadas con sus esquinas principales
     ###Con la diferencia de que en la cara blanca este orientada hacia abajo
     
-        
-    return movimientos, 4
-
-def num_esquinas_alienadas(esquinas, lados):
-    desordenado = 0
     for i in range(len(esquinas)):
-        if esquinas[i] == "FSI":
-            orden = ['W', 'R', 'B']
-        elif esquinas[i] == "FSD":
-            orden = ['W', 'R', 'G']
-        elif esquinas[i] == "FII":
-            orden = ['W', 'O', 'B']
-        elif esquinas[i] == "FID":
-            orden = ['W', 'O', 'G']
-        else:
-            desordenado += 1
-            continue  # Saltar esquinas desconocidas
+        extracto = lados[i]
+        if esquinas[i] == 'TSD': #amarilla, roja, azul
+            for j in range(len(extracto)):
+                # print(extracto[j])
+                if extracto[j] == 'W' and j == 0:
+                    conf_1.append(True)
+                elif extracto[j] == 'B' and j == 1:
+                    conf_1.append(True)
+                elif extracto[j] == 'R' and j == 2:
+                    conf_1.append(True)
+                else:
+                    conf_1.append(False)
+            # print(conf_1)
+            if all(conf_1):
+                print("Esta alineada la primera esquina FSI")
+                movimientos = mov_blanco_cara_trasera(i)
+                break
+        elif esquinas[i] == 'TSI': #amrailla, roja, verde
+            for j in range(len(extracto)):
+                # print(extracto[j])
+                if extracto[j] == 'W' and j == 0:
+                    conf_2.append(True)
+                elif extracto[j] == 'G' and j == 1:
+                    conf_2.append(True)
+                elif extracto[j] == 'R' and j == 2:
+                    conf_2.append(True)
+                else:
+                    conf_2.append(False)
+            # print(conf_2)
+            if all(conf_2):
+                print("Esta alineada la segunda esquina FSD")
+                movimientos = mov_blanco_cara_trasera(i)
+                break
+        elif esquinas[i] == 'TID': #amarillo, naranja, azul
+            for j in range(len(extracto)):
+                # print(extracto[j])
+                if extracto[j] == 'W' and j == 0:
+                    conf_3.append(True)
+                elif extracto[j] == 'B' and j == 1:
+                    conf_3.append(True)
+                elif extracto[j] == 'O' and j == 2:
+                    conf_3.append(True)
+                else:
+                    conf_3.append(False)
+            # print(conf_3)
+            if all(conf_3):
+                print("Esta alineada la tercera esquina FII")
+                movimientos = mov_blanco_cara_trasera(i)
+                break
+        elif esquinas[i] == 'TII': #amarilla, naranja, verde
+            for j in range(len(extracto)):
+                # print(extracto[j])
+                if extracto[j] == 'W' and j == 0:
+                    conf_4.append(True)
+                elif extracto[j] == 'G' and j == 1:
+                    conf_4.append(True)
+                elif extracto[j] == 'O' and j == 2:
+                    conf_4.append(True)
+                else:
+                    conf_4.append(False)
+            # print(conf_4)
+            if all(conf_4):
+                print("Esta alineada la cuarta esquina FID")
+                movimientos = mov_blanco_cara_trasera(i)
+                break
             
-        if lados[i] != orden:
-            desordenado += 1
-        
+    if len(movimientos):
+        #Se retorna los que faltan por ordenar
+        sobran = num_esquinas_alienadas(esquinas,lados) 
+        return movimientos, sobran
+    else:
+        #Se limpian
+        conf_1 , conf_2, conf_3, conf_4 = [],[],[],[]  
+        sobran = num_esquinas_alienadas(esquinas, lados)    
+        return [], sobran #retorna 10 ya que debe estar la esquina desalineada con su esquina principal
 
-    return desordenado
+def alinear_esquina(esquina, lados, esquina_a_mover):
+    rotar = []
+    if esquina_a_mover == 0:  # Se debe alinear a la esquina TSD
+        orden = ['W', 'R', 'B']
+        if esquina == "FSI":  # Frontal Superior Izquierda (Cara blanca)
+            if lados == orden:
+                print("Ya se ordeno FSI")
+                return 1, []
+            else:
+                rotar.append(move_L_left)
+                rotar.append(move_B_right)
+                rotar.append(move_L_right)
+                return 0, rotar
+        elif esquina == "FSD":  # Frontal Superios Derecha (Cara blanca)
+            rotar.append(move_R_right)
+            rotar.append(move_B_right)
+            rotar.append(move_R_left)
+            return 0, rotar
+        elif esquina == "FII":  # Frontal Inferior Izquierda (Cara blanca)
+            rotar.append(move_L_right)
+            rotar.append(move_B_left)
+            rotar.append(move_L_left)
+            rotar.append(move_B_left)
+            return 0, rotar
+        elif esquina == "FID":  # Frontal Inferior Derecha (Cara blanca)
+            rotar.append(move_R_left)
+            rotar.append(move_B_right)
+            rotar.append(move_R_right)
+            rotar.append(move_B_right)
+            return 0, rotar
+        elif esquina == "TSI":  # Trasera Superior Izquierda (Cara amarilla)
+            rotar.append(move_B_right)
+            return 0, rotar
+        elif esquina == "TII":  # Trasera Inferior Izquierda (Cara amarilla)
+            rotar.append(move_B_left)
+            rotar.append(move_B_left)
+            return 0, rotar
+        elif esquina == "TID":  # Trasera Inferior Derecha (Cara amarilla)
+            rotar.append(move_B_left)
+            return 0, rotar
+
+    elif esquina_a_mover == 1:  # Se debe alinear a TSI
+        orden = ['W', 'R', 'G']
+        if esquina == "FSD":  # Frontal Superior Derecha
+            if lados == orden:
+                print("Ya esta ordenada FSD")
+                return 1, []
+            else:
+                rotar.append(move_R_right)
+                rotar.append(move_B_right)
+                rotar.append(move_R_left)
+                rotar.append(move_B_left)
+                return 0, rotar
+        elif esquina == "FSI":  # Frontal superior Izquierda
+            rotar.append(move_L_left)
+            rotar.append(move_B_left)
+            rotar.append(move_L_right)
+            return 0, rotar
+        elif esquina == "FID":
+            rotar.append(move_L_right)
+            rotar.append(move_B_left)
+            rotar.append(move_B_left)
+            rotar.append(move_B_left)
+            return 0, rotar
+        elif esquina == "FII":
+            rotar.append(move_R_left)
+            rotar.append(move_B_right)
+            rotar.append(move_B_right)
+            rotar.append(move_B_right)
+            return 0, rotar
+        elif esquina == "TSD":
+            rotar.append(move_B_left)
+            return 0, rotar
+        elif esquina == "TID":
+            rotar.append(move_B_left)
+            rotar.append(move_B_left)
+            return 0, rotar
+        elif esquina == "TII":
+            rotar.append(move_B_right)
+            return 0, rotar
+
+    elif esquina_a_mover == 2:  # Se debe alinear a TID
+        if esquina == "FII":
+            orden = ['W', 'O', 'B']
+            if lados == orden:
+                print("Ya esta alineado FSD")
+                return 1, []
+            else:
+                rotar.append(move_L_right)
+                rotar.append(move_B_left)
+                rotar.append(move_L_left)
+                return 0, rotar
+        elif esquina == "FSI":
+            rotar.append(move_L_left)
+            rotar.append(move_B_right)
+            rotar.append(move_L_right)
+            rotar.append(move_B_right)
+            return 0, rotar
+        elif esquina == "FSD":
+            rotar.append(move_R_right)
+            rotar.append(move_B_right)
+            rotar.append(move_B_left)
+            rotar.append(move_B_right)
+            return 0, rotar
+        elif esquina == "FID":
+            rotar.append(move_R_left)
+            rotar.append(move_B_left)
+            rotar.append(move_R_right)
+            return 0, rotar
+        elif esquina == "TSD":
+            rotar.append(move_B_right)
+            return 0, rotar
+        elif esquina == "TSI":
+            rotar.append(move_B_right)
+            rotar.append(move_B_right)
+            return 0, rotar
+        elif esquina == "TII":
+            rotar.append(move_B_left)
+            return 0, rotar
+
+    elif esquina_a_mover == 3:  # Se debe alinear a TII
+        if esquina == "FID":
+            orden = ['W', 'O', 'G']
+            if lados == orden:
+                return 1, []
+            else:
+                rotar.append(move_R_left)
+                rotar.append(move_B_right)
+                rotar.append(move_R_right)
+                return 0, rotar
+        elif esquina == "FSI":
+            rotar.append(move_L_left)
+            rotar.append(move_B_left)
+            rotar.append(move_L_right)
+            rotar.append(move_B_left)
+            return 0, rotar
+        elif esquina == "FSD":
+            rotar.append(move_R_right)
+            rotar.append(move_B_left)
+            rotar.append(move_R_left)
+            rotar.append(move_B_left)
+            return 0, rotar
+        elif esquina == "FII":
+            rotar.append(move_L_right)
+            rotar.append(move_B_right)
+            rotar.append(move_L_left)
+            return 0, rotar
+        elif esquina == "TSI":
+            rotar.append(move_B_left)
+            return 0, rotar
+        elif esquina == "TSD":
+            rotar.append(move_B_left)
+            rotar.append(move_B_left)
+        elif esquina == "TID":
+            rotar.append(move_B_right)
+            return 0, rotar
